@@ -21,6 +21,24 @@ For example, in Chapter 1, listing 1.1 is HTML code and listing 1.2 is CSS that 
     - [Shorthand properties](#shorthand-properties)
       - [Beware shorthands silently overriding other styles](#beware-shorthands-silently-overriding-other-styles)
       - [Understanding the order of shorthand values](#understanding-the-order-of-shorthand-values)
+  - [2. Working with relative units](#2-working-with-relative-units)
+    - [The power of relative values](#the-power-of-relative-values)
+      - [The struggle for pixel-perfect design](#the-struggle-for-pixel-perfect-design)
+      - [The end of the pixel-perfect web](#the-end-of-the-pixel-perfect-web)
+    - [`Em`s and `rem`s](#ems-and-rems)
+      - [Using `em`s to define `font-size`](#using-ems-to-define-font-size)
+      - [Using `rem`s for `font-size`](#using-rems-for-font-size)
+    - [Stop thinking in pixels](#stop-thinking-in-pixels)
+      - [Setting a sane default font size](#setting-a-sane-default-font-size)
+      - [Making the panel responsive](#making-the-panel-responsive)
+      - [Resizing a single component](#resizing-a-single-component)
+    - [Viewport-relative units](#viewport-relative-units)
+      - [Using `vw` for font size](#using-vw-for-font-size)
+      - [Using `calc()` for font size](#using-calc-for-font-size)
+    - [Unitless numbers and line-height](#unitless-numbers-and-line-height)
+    - [Custom properties (aka CSS variables)](#custom-properties-aka-css-variables)
+      - [Changing custom properties dynamically](#changing-custom-properties-dynamically)
+      - [Changing custom properties with JavaScript](#changing-custom-properties-with-javascript)
   - [Sources](#sources)
 
 ## Terminology
@@ -253,6 +271,212 @@ a:active {
 - But there are many properties where the values can be more ambiguous
   - e.g., `margin` and `padding`
   - in these cases, the order of the values is significant
+
+## 2. Working with relative units
+
+- Units, such as `em` and `rem`, are not absolute, but relative
+- The value of relative units changes, based on external factors
+  - e.g., the meaning of `2 em` changes depending on which element (and sometimes even which property) you're using it on
+
+### The power of relative values
+
+#### The struggle for pixel-perfect design
+
+- In the web environment, the user can have their browser window set to any number of sizes, and the CSS has to apply to it
+- Furthermore, users can resize the page after it's opened, and the CSS needs to adjust to new constraints
+- Styles can't be applied when you create your page; the browser must calculate those when the page is rendered onscreen
+- This adds a layer of abstraction to CSS
+  - we can't style an element according to an ideal context; we need to specify rules that'll work in any context where that element could be placed
+
+#### The end of the pixel-perfect web
+
+- Relative units are one of the tools CSS provides to work at this level of abstraction
+- Instead of setting a font size at 14 px
+  - you can set it to scale proportionally to the size of the window
+  - or, you can set the size of everything on the page relative to the base font size, and then resize the entire page with a single line of code
+
+### `Em`s and `rem`s
+
+- In CSS, `1 em` means the font size of the current element
+  - its exact value varies depending on the element you're applying it to
+  - see [`ch02/listing-2.1.html`](ch02/listing-2.1.html)
+- Values declared using relative units are evaluated by the browser to an absolute value, called the _computed value_
+- Using `em`s can be convenient when setting properties like `padding`, `height`, `width`, or `border-radius`
+  - these will scale evenly with the element if it inherits different font sizes, or if the user changes the font settings
+  - see [`ch02/listing-2.3.html`](ch02/listing-2.3.html)
+
+#### Using `em`s to define `font-size`
+
+- `font-size` `em`s are derived from the _inherited_ font size
+  - see [`ch02/listing-2.5.html`](ch02/listing-2.5.html)
+- For most browsers, the default font size is 16 px
+- The keyword value `medium` calculates to 16 px
+- `Em`s for font size together with `em`s for other properties
+  - when you use `em`s for both font size and any other properties on the same element
+    - the browser must calculate the font size first, and then it uses that value to calculate the other values
+    - both properties can have the same declared value, but they'll have different computed values
+    - see [`ch02/listing-2.6.html`](ch02/listing-2.6.html)
+- The shrinking font problem
+  - shrinking text occurs when you nest lists several levels deep and apply an `em`-based font size to each level
+    - the selector targets every `<ul>` on the page; so when these lists inherit their font size from other lists, the `em`s compound
+    - see: [`ch02/listing-2.7.html`](ch02/listing-2.7.html)
+    - fix, see: [`ch02/listing-2.9.html`](ch02/listing-2.9.html)
+
+#### Using `rem`s for `font-size`
+
+- The HTML DOM root node is the ancestor of all other elements in the document
+  - has a special pseudo-class selector (`:root`)
+  - specificity of a class
+- `rem` is short for _root em_
+  - `rem`s are relative to the root element
+  - see: `[ch02/listing-2.10.html`](ch02/listing-2.10.html)
+- Note: accessibility - use relative units for font size
+  - setting browser default font size does not resize fonts defined using pixels or other absolute units
+  - because a default font size is vital to some users, particularly those who are vision-impaired, you should always specify font sizes with relative units or percentages
+- Use:
+  - `rem`s for font sizes
+  - pixels for borders
+  - `em`s for most other measures, especially paddings, margins, and border radius
+
+### Stop thinking in pixels
+
+#### Setting a sane default font size
+
+- Let's say you want your default font size to be 14 px
+  - 14/16 = 0.875em
+  - set the default font size at `:root`
+  - see: [`ch02/listing-2.14.html`](ch02/listing-2.14.html)
+
+#### Making the panel responsive
+
+- You can use some _media queries_ to change the base font size, depending on the screen size
+  - an `@media` rule used to specify styles that will be applied only to certain screen sizes or media types (for example, print or screen)
+  - a key component of responsive design
+
+```css
+/* Applies to all screens, but is overridden for larger screens */
+:root {
+  font-size: 0.75em;
+}
+
+/* Applies only to screens 800 px and wider, overriding the original value */
+@media (min-width: 800px) {
+  :root {
+    font-size: 0.875em;
+  }
+}
+
+/* Applies only to screens 1,200 px and larger, overriding both values */
+@media (min-width: 1200px) {
+  :root {
+    font-size: 1em;
+  }
+}
+```
+
+- See: [`ch02/listing-2.15.html`](ch02/listing-2.15.html)
+- These two media queries near the top of your stylesheet can eliminate the need for dozens of media queries throughout the rest of your CSS
+- You can change font size globally by only touching one line of code
+
+#### Resizing a single component
+
+- Sometimes you might need a larger version of the same part of your interface on certain parts of the page
+
+```css
+.panel {
+  /* Establishes a predictable font size for the component */
+  font-size: 1rem;
+  padding: 1em;
+  border: 1px solid #999;
+  border-radius: 0.5em;
+}
+
+.panel > h2 {
+  margin-top: 0;
+  /* Uses ems to make other fonts relative to the established parent font size */
+  font-size: 0.8em;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Compound selector targets elements with both panel and large classes */
+.panel.large {
+  font-size: 1.2rem;
+}
+```
+
+- See [`ch02/listing-2.16.html`](ch02/listing-2.16.html)
+
+### Viewport-relative units
+
+- Viewport-relative units:
+  - `vh`: 1/100th of the viewport height
+  - `vw`: 1/100th of the viewport width
+  - `vmin`: 1/100th of the smaller dimension, height or width (IE9 supports vm instead of vmin)
+  - `vmax`: 1/100th of the larger dimension, height or width (not supported in IE or, at the time of writing, Edge)
+- Viewport-relative lengths are great for things like making a large hero image fill the screen
+  - your image can be inside a long container, but setting the image height to `100vh`, makes it exactly the height of the viewport
+
+#### Using `vw` for font size
+
+- Consider what would happen if you applied `font-size: 2vw` to an element
+  - desktop monitor at 1,200 px, this evaluates to 24 px
+  - tablet with a screen width of 768 px, it evaluates to about 15 px
+  - 24 px is a bit too large on a big screen, 7.5 px on an iPhone 6
+    - use `calc()` function to make the extremes less severe
+
+#### Using `calc()` for font size
+
+- Basic arithmetic with two or more values
+- Useful for combining values that are measured in different units
+- Supports addition (`+`), subtraction (`-`), multiplication (`*`) and division (`/`)
+- Example:
+
+```css
+:root {
+  font-size: calc(0.5em + 1vw);
+}
+```
+
+- `0.5em` operates as a sort of minimum font size, and the `1vw` adds a responsive scalar
+  - base font size that scales from 11.75 px on an iPhone 6 up to 20 px in a 1,200 px browser window
+  - see: [`ch02/listing-2.19.html`](ch02/listing-2.19.html)
+
+### Unitless numbers and line-height
+
+- Some properties allow for unitless values
+  - e.g., `line-height`, `z-index`, and `font-weight`
+- The `line-height` property is unusual in that it accepts both units and unitless values
+  - you should typically use unitless numbers because they're inherited differently
+  - when an element has a value defined using a length (`px`, `em`, `rem`, and so forth), its computed value is inherited by child elements
+  - when you use a unitless number, that declared value is inherited, meaning its computed value is recalculated for each inheriting child element
+- See:
+  - unitless line height: [`ch02/listing-2.21.html`](ch02/listing-2.21.html)
+  - em line height: [`ch02/listing-2.22.html`](ch02/listing-2.22.html)
+
+### Custom properties (aka CSS variables)
+
+- You can declare a variable and assign it a value; then you can reference this value throughout your stylesheet
+  - particularly useful for recurring values like colors
+  - must begin with two hyphens (`--`)
+  - must be declared inside a declaration block
+  - a function called `var()` allows the use of variables
+    - accepts a second parameter, which specifies a fallback value
+- See: [`ch02/listing-2.26.html`](ch02/listing-2.26.html)
+- Note: If a `var()` function evaluates to an invalid value (e.g., `padding: var(--brand-color)`), the property will be set to its initial value
+
+#### Changing custom properties dynamically
+
+- You can define the same variable inside multiple selectors, and the variable will have a different value for various parts of the page
+  - due to cascade and inheritance
+- See: [`ch02/listing-2.29.html`](ch02/listing-2.29.html)
+
+#### Changing custom properties with JavaScript
+
+- Custom properties can also be accessed and manipulated live in the browser using JavaScript
+- See: [`ch02/listing-2.31.html`](ch02/listing-2.31.html)
+- With this technique, you can use JavaScript to re-theme your site, live in the browser
+  - you could also highlight certain parts of the page or make any number of other on-the-fly changes
 
 ## Sources
 

@@ -1,11 +1,14 @@
 <!doctype html>
+
 <head>
   <style>
-    body {
+    :root {
       font-size: 1em;
     }
 
     ul {
+      /* Because this is relative to the root, the font size will remain constant, even
+      if you nest lists */
       font-size: 0.8rem;
     }
   </style>
@@ -13,22 +16,22 @@
 
 <body>
   <ul>
-  <li>Top level
-    <ul>
-      <li>Second level
-        <ul>
-          <li>Third level
-            <ul>
-              <li>Fourth level
-                <ul>
-                  <li>Fifth level</li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
+    <li>Top level
+      <ul>
+        <li>Second level
+          <ul>
+            <li>Third level
+              <ul>
+                <li>Fourth level
+                  <ul>
+                    <li>Fifth level</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 </body>

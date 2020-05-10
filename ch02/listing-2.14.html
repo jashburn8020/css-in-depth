@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -10,12 +11,19 @@
     }
 
     .panel {
+      /* em for padding and border-radius */
       padding: 1em;
-      border: 1px solid #999;
       border-radius: 0.5em;
+      /* 1px for a thin border */
+      border: 1px solid #999;
     }
-    .panel > h2 {
+
+    /* > is a direct descendant combinator - target h2 that is a child element of a
+    .panel element */
+    .panel>h2 {
+      /* Remove extra space from the panel top */
       margin-top: 0;
+      /* rem for font-size */
       font-size: 0.8rem;
       font-weight: bold;
       text-transform: uppercase;

@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     body {
@@ -9,6 +10,8 @@
       font-size: 0.8em;
     }
 
+    /* Targets all unordered lists within an unordered list, except the top level -
+    font size equal to their parents */
     ul ul {
       font-size: 1em;
     }
@@ -17,22 +20,22 @@
 
 <body>
   <ul>
-  <li>Top level
-    <ul>
-      <li>Second level
-        <ul>
-          <li>Third level
-            <ul>
-              <li>Fourth level
-                <ul>
-                  <li>Fifth level</li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </li>
-</ul>
+    <li>Top level
+      <ul>
+        <li>Second level
+          <ul>
+            <li>Third level
+              <ul>
+                <li>Fourth level
+                  <ul>
+                    <li>Fifth level</li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </li>
+  </ul>
 </body>

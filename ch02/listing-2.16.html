@@ -1,14 +1,17 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
       font-size: 0.75em;
     }
+
     @media (min-width: 800px) {
       :root {
         font-size: 0.875em;
       }
     }
+
     @media (min-width: 1200px) {
       :root {
         font-size: 1em;
@@ -20,21 +23,24 @@
     }
 
     .panel {
+      /* Establishes a predictable font size for the component */
       font-size: 1rem;
       padding: 1em;
       border: 1px solid #999;
       border-radius: 0.5em;
     }
 
-    .panel > h2 {
+    .panel>h2 {
       margin-top: 0;
+      /* Uses ems to make other fonts relative to the established parent font size */
       font-size: 0.8em;
       font-weight: bold;
       text-transform: uppercase;
     }
 
+    /* Compound selector targets elements with both panel and large classes */
     .panel.large {
-      font-size: 1.2em;
+      font-size: 1.2rem;
     }
   </style>
 </head>

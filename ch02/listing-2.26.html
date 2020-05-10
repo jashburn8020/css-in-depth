@@ -1,13 +1,16 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
+      /* Custom properties (aka CSS variables) */
       --main-font: Helvetica, Arial, sans-serif;
       --brand-color: #369;
     }
 
     p {
       font-family: var(--main-font, sans-serif);
+      /* Includes fallback value in case --brand-color is undefined */
       color: var(--brand-color, blue);
     }
   </style>
