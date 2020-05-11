@@ -1,7 +1,12 @@
 <!doctype html>
+
 <head>
   <style>
     body {
+      /* For some site designs, the background color of several containers might be
+      transparent. When this is the case, it might be helpful to temporarily apply a
+      background color to the container until you get it sized and positioned
+      accordingly */
       background-color: #eee;
       font-family: Helvetica, Arial, sans-serif;
     }
@@ -12,17 +17,23 @@
       border-radius: .5em;
     }
 
+    main {
+      /* Fixes IE bug, where <main> elements are rendered inline by default */
+      display: block;
+    }
+
     .main {
       background-color: #fff;
       border-radius: .5em;
     }
 
     .sidebar {
+      /* Currently, the sidebar is empty so, by default, it has no height. Add padding
+      to give it some height */
       padding: 1.5em;
       background-color: #fff;
       border-radius: .5em;
     }
-
   </style>
 </head>
 

@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -24,10 +25,16 @@
 
     .container {
       display: table;
+      /* Make the table fill its container's width; default won't expand to 100% */
       width: 100%;
+      /* Space between cells - for the gutter
+      Side-effect: Value is also applied to the outside edges of the table, and so the
+      columns no longer align with the header on the left and right edges */
+      border-spacing: 1.5em 0
     }
 
     .main {
+      /* Make the column mimic table cells */
       display: table-cell;
       width: 70%;
       background-color: #fff;
@@ -35,14 +42,15 @@
     }
 
     .sidebar {
+      /* Make the column mimic table cells */
       display: table-cell;
       width: 30%;
+      /* Margin no longer works - can't be applied to table-cell elements */
       margin-left: 1.5em;
       padding: 1.5em;
       background-color: #fff;
       border-radius: .5em;
     }
-
   </style>
 </head>
 

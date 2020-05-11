@@ -39,6 +39,27 @@ For example, in Chapter 1, listing 1.1 is HTML code and listing 1.2 is CSS that 
     - [Custom properties (aka CSS variables)](#custom-properties-aka-css-variables)
       - [Changing custom properties dynamically](#changing-custom-properties-dynamically)
       - [Changing custom properties with JavaScript](#changing-custom-properties-with-javascript)
+  - [3. Mastering the box model](#3-mastering-the-box-model)
+    - [Difficulties with element width](#difficulties-with-element-width)
+      - [Avoiding magic numbers](#avoiding-magic-numbers)
+      - [Adjusting the box model](#adjusting-the-box-model)
+      - [Using universal `border-box` sizing](#using-universal-border-box-sizing)
+      - [Adding a gutter between columns](#adding-a-gutter-between-columns)
+    - [Difficulties with element height](#difficulties-with-element-height)
+      - [Controlling overflow behavior](#controlling-overflow-behavior)
+      - [Applying alternatives to percentage-based heights](#applying-alternatives-to-percentage-based-heights)
+        - [CSS table layouts](#css-table-layouts)
+        - [Flexbox](#flexbox)
+      - [Using `min-height` and `max-height`](#using-min-height-and-max-height)
+      - [Vertically centering content](#vertically-centering-content)
+    - [Negative margins](#negative-margins)
+    - [Collapsed margins](#collapsed-margins)
+      - [Collapsing between text](#collapsing-between-text)
+      - [Collapsing multiple margins](#collapsing-multiple-margins)
+      - [Collapsing outside a container](#collapsing-outside-a-container)
+    - [Spacing elements within a container](#spacing-elements-within-a-container)
+      - [Considering changing content](#considering-changing-content)
+      - [Creating a more general solution: the lobotomized owl selector](#creating-a-more-general-solution-the-lobotomized-owl-selector)
   - [Sources](#sources)
 
 ## Terminology
@@ -477,6 +498,283 @@ a:active {
 - See: [`ch02/listing-2.31.html`](ch02/listing-2.31.html)
 - With this technique, you can use JavaScript to re-theme your site, live in the browser
   - you could also highlight certain parts of the page or make any number of other on-the-fly changes
+
+## 3. Mastering the box model
+
+### Difficulties with element width
+
+- Basic page content: [`ch03/listing-3.2.html`](ch03/listing-3.2.html)
+- Put two columns in place using a float-based layout
+  - see: [`ch03/listing-3.3.html`](ch03/listing-3.3.html)
+
+```css
+.main {
+  float: left;
+  width: 70%;
+  ...;
+}
+
+.sidebar {
+  float: left;
+  width: 30%;
+  padding: 1.5em;
+  ...;
+}
+```
+
+- Instead of the two columns sitting side by side, they line wrapped
+  - columns took more than 100% of available width even though the widths are 70% and 30%
+- Default behavior of the box model
+  - width and height specified for an element are for its content
+  - any padding, border, and margins are then added to that width
+
+#### Avoiding magic numbers
+
+- The naive fix is to reduce the width of one of the columns
+  - e.g., 26% width for the sidebar
+  - on smaller viewports, the sidebar will still line-wrap
+- An alternative is to use the `calc()` function to reduce the width
+  - e.g., `calc(30% - 3em)`
+
+#### Adjusting the box model
+
+- Adjust the box model behavior with its **`box-sizing`** property
+  - default value is `content-box`
+  - use **`border-box`**
+    - combined size of the content, padding, and border
+  - see: [`ch03/listing-3.4.html`](ch03/listing-3.4.html)
+
+#### Using universal `border-box` sizing
+
+```css
+/* Universal border box fix - apply to the root element */
+:root {
+  box-sizing: border-box;
+}
+
+/* Box sizing isn't an inherited property; use the inherit keyword to force it to be */
+*,
+::before,
+::after {
+  box-sizing: inherit;
+}
+```
+
+- See: [`ch03/listing-3.6.html`](ch03/listing-3.6.html)
+- This allows you to add third-party components with their own CSS to your page, especially if their CSS wasn't written with this fix in mind
+  - you can convert a third-party component into a `content-box` when necessary by targeting its top-level container
+  - all elements inside the component will inherit the box sizing
+
+```css
+.third-party-component {
+  box-sizing: content-box;
+}
+```
+
+#### Adding a gutter between columns
+
+- Add a margin to one of the columns to create a small gap (gutter) between columns
+- Percent-based gutter margin:
+
+```css
+.sidebar {
+  float: left;
+  width: 29%;
+  margin-left: 1%;
+  ...;
+}
+```
+
+- Use `calc()` to subtract the gutter from the width:
+
+```css
+.sidebar {
+  float: left;
+  width: calc(30% - 1.5em);
+  margin-left: 1.5em;
+  ...;
+}
+```
+
+- See: [`ch03/listing-3.8.html`](ch03/listing-3.8.html)
+
+### Difficulties with element height
+
+- Typically it's best to avoid setting explicit heights on elements
+- Normal document flow
+  - refers to the default layout behavior of elements on the page
+    - inline elements flow along with the text of the page, from left to right, line wrapping when they reach the edge of their container
+    - block-level elements fall on individual lines, with a line break above and below
+  - is designed to work with a constrained width and an unlimited height
+  - height of a container is organically determined by its contents, not by the container itself
+
+#### Controlling overflow behavior
+
+- When you explicitly set an element's height, you run the risk of its contents overflowing the container
+- You can control the exact behavior of the overflowing content with the `overflow` property, which supports four values:
+  - `visible` (default): All content is visible, even when it overflows the container's edges
+  - `hidden`: Content that overflows the container's padding edge is clipped and won't be visible
+  - `scroll`: Scrollbars are added to the container so the user can scroll to see the remaining content
+  - `auto`: Scrollbars are added to the container only if the contents overflow
+- Horizontal overflow
+  - it's possible for content to overflow horizontally, e.g., due to a long URL in a narrow container
+  - you can control only horizontal overflow using the `overflow-x` property, or vertical overflow with `overflow-y`
+  - these properties support the same values as the `overflow` property
+
+#### Applying alternatives to percentage-based heights
+
+- Specifying height using a percentage is problematic
+  - percentage refers to the size of an element's containing block
+  - the height of that container is typically determined by the height of its children
+  - circular definition - the browser will ignore the declaration
+- For percentage-based heights to work, the parent must have an explicitly defined height
+- Use the viewport-relative `vh` units to make a container fill the screen
+- Columns of equal height
+  - the best solution is for the columns to size themselves naturally, and then extend the shorter column so that its height is equal to the height of the taller one
+
+##### CSS table layouts
+
+- Instead of using floats, you'll make the container a `display: table` and each column a `display: table-cell`
+  - see (misaligned outer edges): [`ch03/listing-3.9.html`](ch03/listing-3.9.html)
+- Fix outer edge misalignment by using negative margins, applied to a new container that wraps around the whole table
+  - see: [`ch03/listing-3.10.html`](ch03/listing-3.10.html)
+
+##### Flexbox
+
+- By applying `display: flex` to the container, it becomes a _flex container_
+  - its child elements will become the same height by default
+  - you can set widths and margins on the items
+    - even though this would add up to more than a 100%, the flexbox sorts it out
+  - see: [`ch03/listing-3.11.html`](ch03/listing-3.11.html)
+
+#### Using `min-height` and `max-height`
+
+- You can use `min-height` and `max-height` to specify a minimum or maximum value, allowing the element to size naturally within those bounds
+- `min-height` means the element will be at least as high as you specify, and if the content doesn't fit, the browser will allow the element to grow naturally to prevent overflow
+- `max-height` allows an element to size naturally, up to a point; if that size is reached, the element doesn't become any taller, and the contents will overflow
+- Similar properties `min-width` and `max-width` constrain an element's width
+
+#### Vertically centering content
+
+- Why doesn't `vertical-align` work?
+  - only affects inline and table-cell elements
+  - inline elements
+    - controls alignment among other elements on the same line
+    - e.g., control how an inline image aligns with the neighboring text
+  - table-cell elements
+    - controls the alignment of the contents within the cell
+    - you can accomplish vertical centering with a CSS table layout
+- A lot of the trouble comes from setting the height of a container at a constant value, and then attempting to center a dynamically sized piece of content inside it
+- The simplest way to vertically center in CSS
+  - give a container equal top and bottom padding, and let both the container and its contents determine their height naturally
+  - see [`ch03/listing-3.12.html`](ch03/listing-3.12.html)
+- **Guide to vertical centering**
+  - _Can you use a natural height container?_
+    - apply an equal top and bottom padding to the container to center its contents
+  - _Do you need a specific height container, or do you need to avoid using padding?_
+    - use `display: table-cell` and `vertical-align: middle` on your container
+  - _Can you use flexbox?_
+    - if you don't need to support IE9, you can center your content with flexbox
+    - see chapter 5
+  - _Is the inner content only one line of text?_
+    - set a tall line height equal to the desired container height
+    - this will force the container to grow to contain the line height
+    - if the contents aren't inline, you may have to set them to `inline-block`
+  - _Do you know the height of both the container and the inner content?_
+    - center the contents with absolute positioning
+    - see chapter 7
+    - use this when all approaches mentioned here fail
+  - _What if you don't know the height of the inner element?_
+    - use absolute positioning in conjunction with a transform
+    - see chapter 15
+    - use this only if you've ruled out all other options
+  - When in doubt, see <http://howtocenterincss.com>
+
+### Negative margins
+
+- The exact behavior of a negative margin depends on which side of the element you apply it to
+  - left or top
+    - moves the element leftward or upward, respectively
+    - can cause the element to overlap another element preceding it in the document flow
+  - right or bottom
+    - doesn't shift the element
+    - pulls in any succeeding element
+    - a negative bottom margin is not unlike giving the element(s) beneath it a negative top margin
+- When a block element doesn't have a specified width, it naturally fills the width of its container
+  - negative right margin pulls the edge of the element to the right, bringing it outside the container
+  - with an equal negative left margin, and both sides of the element will be extended outside the container
+  - allows you to resize the table layout in [`ch03/listing-3.10.html`](ch03/listing-3.10.html) to fill the `<body>` width, despite the border spacing
+
+### Collapsed margins
+
+- When top and/or bottom margins are adjoining, they overlap, combining to form a single margin - _collapsing_
+
+#### Collapsing between text
+
+- The main reason for collapsed margins has to do with the spacing of blocks of text
+- Paragraphs (`<p>`), by default, have a 1 em top margin and a 1 em bottom margin
+  - applied by the user agent stylesheet
+  - when you stack two paragraphs, the margins collapse, overlapping to produce only 1 em of space between the two paragraphs
+- Similarly so between an `<h2>`, with a bottom margin of 0.83 em, and the following paragraph
+  - the size of the collapsed margin is equal to the largest of the joined margins
+
+#### Collapsing multiple margins
+
+- Elements don't have to be adjacent siblings for their margins to collapse
+  - if you wrap the paragraph inside an extra `div`, the visual result will be the same
+- See `<h2>`, `<div>` and `<p>` in [`ch03/listing-3.13.html`](ch03/listing-3.13.html)
+- Note: Margin collapsing only occurs with top and bottom margins; left and right margins don't collapse
+
+#### Collapsing outside a container
+
+- An element's margin collapsing outside its container typically produces an undesirable effect if the container has a background
+- See `<header>` and `<h1>` in [`ch03/listing-3.13.html`](ch03/listing-3.13.html)
+  - you'd want `<h1>`'s margin to stay inside `<header>`
+  - fixed for the main section of the page
+    - margin above "Come join us!" doesn't collapse upward outside of its container
+    - margins of flexbox items don't collapse
+- Padding provides another solution
+  - if you add top and bottom padding to the header, the margins inside it won't collapse to the outside
+  - see: [`ch03/listing-3.14.html`](ch03/listing-3.14.html)
+  - now there's no margin between the header and the main content
+- Ways to prevent margins from collapsing:
+  - applying `overflow: auto` (or any value other than visible) to the container
+    - the least intrusive solution
+  - adding a border or padding between two margins
+  - margins won't collapse to the outside of a container that is floated, that is an inline block, or that has an absolute or fixed position
+  - when using a flexbox, margins won't collapse between elements that are part of the flex layout
+    - also the case with grid layout
+  - elements with a `table-cell` display don't have a margin, so they won't collapse
+    - also applies to `table-row` and most other table display types
+    - exceptions are `table`, `table-inline`, and `table-caption`
+
+### Spacing elements within a container
+
+- The interplay between the padding of a container and the margins of its content can be tricky to work with
+- See `.button-link` in [`ch03/listing-3.16b.html`](ch03/listing-3.16b.html)
+  - fix by using the adjacent sibling combinator (`+`) to target only `button-link`s that immediately follow other `button-link`s as siblings
+  - see `.button-link+.button-link` in [`ch03/listing-3.17.html`](ch03/listing-3.17.html)
+
+#### Considering changing content
+
+- Add a third link to the page
+  - see [`ch03/listing-3.19.html`](ch03/listing-3.19.html)
+  - you can add a top margin to the sponsorship link
+  - if the sidebar changes, e.g., the sponsorship link to be moved to the top, or add a new widget to the sidebar, you'll have to revisit these margins
+
+#### Creating a more general solution: the lobotomized owl selector
+
+- The lobotomized owl selector: `* + *`
+  - targets any element that immediately follows any other element
+    - selects all elements on the page that aren't the first child of their parent
+- Use the lobotomized owl to add top margins to elements throughout your page
+  - see: [`ch03/listing-3.20.html`](ch03/listing-3.20.html)
+  - unwanted side-effect: the sidebar is an adjacent sibling of the main column, it too receives a to margin
+  - revert sidebar top margin to 0
+    - see [`ch03/listing-3.21.html`](ch03/listing-3.21.html)
+- Using the lobotomized owl like this is a tradeoff
+  - simplifies many margins throughout your page
+  - you have to override it in places where you don't want it to apply
 
 ## Sources
 

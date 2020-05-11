@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -42,8 +43,12 @@
     }
 
     .button-link {
+      /* Block - fill the width of the container, each appear on its own line */
       display: block;
       padding: .5em;
+      /* Without margins, they'll stack directly atop one another. With margin-top, you
+      have extra space at the top of the container - first button's top margin plus the
+      container's top padding. */
       margin-top: 1.5em;
       color: #fff;
       background-color: #0090C9;
@@ -51,7 +56,6 @@
       text-decoration: none;
       text-transform: uppercase;
     }
-
   </style>
 </head>
 

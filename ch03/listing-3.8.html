@@ -1,8 +1,10 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
       box-sizing: border-box;
+      --gutter-width: 1.5em;
     }
 
     *,
@@ -31,13 +33,14 @@
 
     .sidebar {
       float: left;
-      width: calc(30% - 1.5em);
-      margin-left: 1.5em;
+      width: calc(30% - var(--gutter-width));
+      margin-left: var(--gutter-width);
+      /* width: calc(30% - 1.5em);
+      margin-left: 1.5em; */
       padding: 1.5em;
       background-color: #fff;
       border-radius: .5em;
     }
-
   </style>
 </head>
 

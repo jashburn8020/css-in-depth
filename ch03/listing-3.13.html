@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -39,7 +40,6 @@
       background-color: #fff;
       border-radius: .5em;
     }
-
   </style>
 </head>
 
@@ -47,8 +47,13 @@
   <header>
     <h1>Franklin Running Club</h1>
   </header>
+  <!-- <h1> bottom (and top) margin (0.67em) collapsed with <header> (no margin),
+  resulting in 0.67em bottom margin on <header> -->
   <div class="container">
     <main class="main">
+      <!-- 3 different margins collapsing together: bottom margin of <h2>, top margin
+      of <div>, and top margin of <p>. The space between the elements is the largest of
+      the 3. -->
       <h2>Come join us!</h2>
       <div>
         <p>

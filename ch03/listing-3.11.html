@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -23,23 +24,28 @@
     }
 
     .container {
+      /* Apply flex display to the container */
       display: flex;
     }
 
     .main {
+      /* Items inside the flex container don't need specified display or float
+      properties */
       width: 70%;
       background-color: #fff;
       border-radius: .5em;
     }
 
     .sidebar {
+      /* Items inside the flex container don't need specified display or float
+      properties */
       width: 30%;
       padding: 1.5em;
+      /* Margins work as before with float */
       margin-left: 1.5em;
       background-color: #fff;
       border-radius: .5em;
     }
-
   </style>
 </head>
 
