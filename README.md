@@ -60,6 +60,19 @@ For example, in Chapter 1, listing 1.1 is HTML code and listing 1.2 is CSS that 
     - [Spacing elements within a container](#spacing-elements-within-a-container)
       - [Considering changing content](#considering-changing-content)
       - [Creating a more general solution: the lobotomized owl selector](#creating-a-more-general-solution-the-lobotomized-owl-selector)
+  - [4. Making sense of floats](#4-making-sense-of-floats)
+    - [The purpose of floats](#the-purpose-of-floats)
+    - [Container collapsing and the clearfix](#container-collapsing-and-the-clearfix)
+      - [Understanding container collapsing](#understanding-container-collapsing)
+      - [Understanding the clearfix](#understanding-the-clearfix)
+    - [Unexpected "float catching"](#unexpected-float-catching)
+    - [Media objects and block formatting contexts](#media-objects-and-block-formatting-contexts)
+      - [Establishing a block formatting context](#establishing-a-block-formatting-context)
+      - [Using a block formatting context for media object layouts](#using-a-block-formatting-context-for-media-object-layouts)
+    - [Grid systems](#grid-systems)
+      - [Understanding a grid system](#understanding-a-grid-system)
+      - [Building a grid system](#building-a-grid-system)
+      - [Adding gutters](#adding-gutters)
   - [Sources](#sources)
 
 ## Terminology
@@ -776,6 +789,211 @@ a:active {
   - simplifies many margins throughout your page
   - you have to override it in places where you don't want it to apply
 
+## 4. Making sense of floats
+
+### The purpose of floats
+
+- The original purpose for a float
+  - pull an element (often an image) to one side of its container, allowing the document flow to wrap around it
+  - a floated element is removed from the normal document flow and pulled to the edge of the container
+  - if you float multiple elements in the same direction, they'll stack alongside one another
+- Base styles for a page
+  - see: [`ch04/listing-4.2.html`](ch04/listing-4.2.html)
+- Tip: It's usually easiest to lay out the large regions of a page first, then work your way to the smaller elements within
+- **Double container pattern**
+  - constraining the width and centering content on a page
+  - placing your content inside two nested containers and then set margins on the inner container to position it within the outer one
+  - `<body>` serves as the outer container
+    - already 100% of the page width, so you won't have to apply any new styles to it
+  - inside that, wrap the entire contents of the page in a `<div class="container">`
+    - serves as the inner container
+    - apply a `max-width` and `auto` margins to center the contents
+      - auto left and right margins will grow to fill the available space
+  - see: [`ch04/listing-4.3.html`](ch04/listing-4.3.html)
+
+### Container collapsing and the clearfix
+
+- A few behaviors of floats might catch you off guard
+
+#### Understanding container collapsing
+
+- Float the four media boxes to the left
+  - see [`ch04/listing-4.4.html`](ch04/listing-4.4.html)
+  - white background behind page title ("Running tips"), but it stops there instead of extending down to encompass the media boxes
+- Unlike elements in the normal document flow, _floated elements do not add height to their parent elements_
+  - original purpose of floats: to allow text to wrap around them
+  - when you float an image inside a paragraph, the paragraph does not grow to contain the image
+  - if the image is taller than the text of the paragraph
+    - the next paragraph will start immediately below the text of the first
+    - text in both paragraphs will wrap around the float
+- One way you can correct this is with the float's companion property, `clear`
+  - if you place an element at the end of the main container and use clear, it causes the container to expand to the bottom of the floats
+  - see: [`ch04/listing-4.5.html`](ch04/listing-4.5.html)
+  - `clear: both`
+    - the clearance of the generated box is set to the amount necessary to place the top border edge below the bottom outer edge of any right-floating and left-floating boxes that resulted from elements earlier in the source document
+    - causes this element to move below the bottom of floated elements, rather than beside them
+    - because this empty div itself is not floated, the container will extend to encompass it, thereby containing the floats above it as well
+
+#### Understanding the clearfix
+
+- Instead of adding an extra `div` to your markup, you'll use a pseudo-element
+  - `::after` - you can effectively insert an element into the DOM at the end of the container, without adding it to the markup
+- **Clearfix**
+  - applied to the element that contains the floats
+  - see: [`ch04/listing-4.6.html`](ch04/listing-4.6.html)
+
+```css
+/* Target at the end of the container */
+.clearfix::after {
+  display: block;
+  /* Content value cause the pseudo-element to appear in the document */
+  content: " ";
+  /* Clear all floats in the container */
+  clear: both;
+}
+```
+
+- Inconsistency
+  - margins of floated elements inside won't collapse to the outside of the clearfixed container
+  - margins of non-floated elements will collapse as normal
+  - the heading "Running tips" is pressed directly against the top of the white `<main>`
+- Modified clearfix to contain all margins:
+
+```css
+.clearfix::before,
+.clearfix::after {
+  /* Prevent margins from collapsing through the pseudo elements */
+  display: table;
+  content: " ";
+}
+
+/* Only the ::after pseudo element needs to clear floats */
+.clearfix::after {
+  clear: both;
+}
+```
+
+- Clearfix and `display: table`
+  - `display: table` in the clearfix contains margins
+    - creation of a display-table element (or pseudo-element) implicitly creates a table row within the element and a table cell within that
+    - margins don't collapse through table-cell elements
+      - they won't collapse through a display-table pseudo element either
+  - `display: table-cell` does not have the same effect
+    - the `clear` property only works when applied to block-level elements
+      - a table is a block-level element, but a table cell is not
+  - `display: table` to clear floats, its implied table cell to contain the margins
+
+### Unexpected "float catching"
+
+- Three left-floated boxes
+  - box 3 doesn't float all the way to the left if box 1 is taller than box 2, instead it floats up against box 1
+  - box 3 "catches" on the bottom corner of box 1
+
+```text
+┌─────┐ ┌─────┐
+│  1  │ │  2  │
+│     │ └─────┘
+└─────┘ ┌─────┐
+        │  3  │
+        └─────┘
+```
+
+- Fix: the first element of each row needs to clear the float above it
+  - target with the `:nth-child()` pseudo-class selector
+  - see: [`ch04/listing-4.8.html`](ch04/listing-4.8.html)
+
+```css
+/* Each new row clears the row above */
+.media:nth-child(odd) {
+  clear: left;
+}
+```
+
+- If you had three items per row: `.media:nth-child(3n+1)`
+- Only works when you know how many elements are on each row
+  - if the number of items can vary your best bet is to use a different layout technique such as the flexbox or inline-block elements
+- Add margins to our media elements to provide a gutter between them
+  - the lobotomized owl will also add a top margin to every element except the first
+  - need to reset the top margin
+  - see: [`ch04/listing-4.9.html`](ch04/listing-4.9.html)
+
+### Media objects and block formatting contexts
+
+- **Media object**
+  - image on one side, and a block of text beside it
+- Float the media object image to the left
+  - see: [`ch04/listing-4.10.html`](ch04/listing-4.10.html)
+
+#### Establishing a block formatting context
+
+- Media body extends all the way to the left, envelops the floated image
+  - we want to position the media body's left edge to the right of the floated image
+- **Block formatting context** (BFC)
+  - a region of the page in which elements are laid out
+  - is part of the surrounding document flow, but it isolates its contents from the outside context
+  - isolation does three things for the element that establishes the BFC:
+    - it contains the top and bottom margins of all elements within it; they won't collapse with margins of elements outside of the block formatting context
+    - it contains all floated elements within it
+    - it doesn't overlap with floated elements outside the BFC
+  - applying any of the following property values to an element triggers a BFC:
+    - `float: left` or `float: right`: anything but `none`
+    - `overflow: hidden`, `auto`, or `scroll`: anything but `visible`
+    - `display: inline-block`, `table-cell`, `table-caption`, `flex`, `inline-flex`, `grid`, or `inline-grid`: these are called block containers
+    - `position: absolute` or `position: fixed`
+
+#### Using a block formatting context for media object layouts
+
+- The best way to do this is often to set an `overflow` value, either `hidden` or `auto`
+  - see: [`ch04/listing-4.11.html`](ch04/listing-4.11.html)
+- Note: In some circumstances, the contents from one block formatting context may still overlap the contents of another
+  - if the contents overflow the container (for example, the content is too wide)
+  - if negative margins pull the contents outside the container
+
+### Grid systems
+
+- A series of class names you can add to your markup to structure portions of the page into rows and columns
+  - provide no visual styles, like colors or borders
+  - only set widths and positions of containers
+    - inside each of these containers, you can add new elements to visually style however you want
+  - general principle: put a row container around one or more column containers
+
+#### Understanding a grid system
+
+- Defined to hold a certain number of columns in each row; usually 12, but can vary
+- Child elements of a row may have a width anywhere from one column up to 12 columns wide
+- 12: divisible by two, three, four, and six - provides a lot of flexibility
+  - three-column layout (three, 4-column elements)
+  - four-column layout (four, 3-column elements)
+  - asymmetrical layouts, such as a 9-column main element and a 3-column sidebar
+- Markup
+  - each row has a row container `div`
+  - inside that you'll place a div for each column element with a `column-n` class
+    - `n` is the number of columns across the grid
+
+#### Building a grid system
+
+- A row around each set of two media objects
+- Wrap each media object within its own 6-column container
+- Add clearfix to each row
+- Float all columns to the left, and specify widths for each column value
+- Media object doesn't need to float left anymore as the grid column does that for you
+- Remove margins from the media object, and the nth-child selector that clears each row
+- Add bottom padding on the container
+  - because you removed all margins from the media object, including the bottom margin, there's no longer a gap below the last row of media objects and the bottom of their container
+- See:
+  - [`ch04/listing-4.14.html`](ch04/listing-4.14.html)
+  - [`ch04/listing-4.16.html`](ch04/listing-4.16.html)
+
+#### Adding gutters
+
+- You can create gutters by adding left and right padding to each grid column
+  - remove top margin from all columns, overriding the lobotomized owl
+  - see: [`ch04/listing-4.17.html`](ch04/listing-4.17.html)
+  - introduces a slight misalignment between a grid column and content outside the grid row
+- Fix misalignment by stretching the row to be a little wider using negative margins on the left and right sides
+  - see: [`ch04/listing-4.18.html`](ch04/listing-4.18.html)
+
 ## Sources
 
 - Grant, Keith J. _CSS in depth_. Shelter Island, NY: Manning Publications Co, 2018.
+- "CSS Properties." _CSS Infos_, css-infos.net/.

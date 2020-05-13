@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -16,35 +17,73 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
-    .row {
-    }
+    .row {}
 
+    /* Clearfix so that the row contains its floated column */
     .row::after {
       content: " ";
       display: block;
       clear: both;
     }
 
+    /* Target all elements with a class attribute that includes "column-"
+    - attribute selector
+    - *= comparator specifies any value that includes the substring specified */
     [class*="column-"] {
       float: left;
     }
 
-    .column-1 { width: 8.3333%; }
-    .column-2 { width: 16.6667%; }
-    .column-3 { width: 25%; }
-    .column-4 { width: 33.3333%; }
-    .column-5 { width: 41.6667%; }
-    .column-6 { width: 50%; }
-    .column-7 { width: 58.3333%; }
-    .column-8 { width: 66.6667%; }
-    .column-9 { width: 75%; }
-    .column-10 { width: 83.3333%; }
-    .column-11 { width: 91.6667% }
-    .column-12 { width: 100%; }
+    .column-1 {
+      width: 8.3333%;
+    }
+
+    .column-2 {
+      width: 16.6667%;
+    }
+
+    .column-3 {
+      width: 25%;
+    }
+
+    .column-4 {
+      width: 33.3333%;
+    }
+
+    .column-5 {
+      width: 41.6667%;
+    }
+
+    .column-6 {
+      width: 50%;
+    }
+
+    .column-7 {
+      width: 58.3333%;
+    }
+
+    .column-8 {
+      width: 66.6667%;
+    }
+
+    .column-9 {
+      width: 75%;
+    }
+
+    .column-10 {
+      width: 83.3333%;
+    }
+
+    .column-11 {
+      width: 91.6667%
+    }
+
+    .column-12 {
+      width: 100%;
+    }
 
     header {
       padding: 1em 1.5em;
@@ -65,6 +104,9 @@
       margin: 0 auto;
     }
 
+    /* No longer need to float left - done by grid column.
+    Does not need width - fill 100% of column-6.
+    Margin can be removed. */
     .media {
       float: left;
       margin: 0 1.5em 1.5em 0;
@@ -74,6 +116,7 @@
       border-radius: 0.5em;
     }
 
+    /* No longer needed - done by row::after */
     .media:nth-child(odd) {
       clear: left;
     }
@@ -97,6 +140,7 @@
       display: table;
       content: " ";
     }
+
     .clearfix::after {
       clear: both;
     }
@@ -112,7 +156,9 @@
     <main class="main clearfix">
       <h2>Running tips</h2>
 
+      <!-- A row around each set of two media objects -->
       <div class="row">
+        <!-- column-6 around each media object -->
         <div class="column-6">
           <div class="media">
             <img class="media-image" src="runner.png" width="80">
@@ -127,6 +173,7 @@
           </div>
         </div>
 
+        <!-- column-6 around each media object -->
         <div class="column-6">
           <div class="media">
             <img class="media-image" src="shoes.png" width="80">
@@ -141,6 +188,7 @@
         </div>
       </div>
 
+      <!-- A row around each set of two media objects -->
       <div class="row">
         <div class="column-6">
           <div class="media">

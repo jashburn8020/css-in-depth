@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -16,7 +17,7 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
@@ -54,10 +55,13 @@
 
     .media-image {
       float: left;
+      /* Insert space between it and the body */
       margin-right: 1.5em;
     }
 
     .media-body {
+      /* Establishes a new block formatting context so the body doesn't overlap the
+      floated image */
       overflow: auto;
       margin-top: 0;
     }
@@ -71,6 +75,7 @@
       display: table;
       content: " ";
     }
+
     .clearfix::after {
       clear: both;
     }

@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -16,11 +17,13 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
     .row {
+      /* Fix misalignment by stretching the row to be a little wider using negative
+      margins on the left and right sides */
       margin-left: -0.75em;
       margin-right: -0.75em;
     }
@@ -37,18 +40,53 @@
       margin-top: 0;
     }
 
-    .column-1 { width: 8.3333%; }
-    .column-2 { width: 16.6667%; }
-    .column-3 { width: 25%; }
-    .column-4 { width: 33.3333%; }
-    .column-5 { width: 41.6667%; }
-    .column-6 { width: 50%; }
-    .column-7 { width: 58.3333%; }
-    .column-8 { width: 66.6667%; }
-    .column-9 { width: 75%; }
-    .column-10 { width: 83.3333%; }
-    .column-11 { width: 91.6667% }
-    .column-12 { width: 100%; }
+    .column-1 {
+      width: 8.3333%;
+    }
+
+    .column-2 {
+      width: 16.6667%;
+    }
+
+    .column-3 {
+      width: 25%;
+    }
+
+    .column-4 {
+      width: 33.3333%;
+    }
+
+    .column-5 {
+      width: 41.6667%;
+    }
+
+    .column-6 {
+      width: 50%;
+    }
+
+    .column-7 {
+      width: 58.3333%;
+    }
+
+    .column-8 {
+      width: 66.6667%;
+    }
+
+    .column-9 {
+      width: 75%;
+    }
+
+    .column-10 {
+      width: 83.3333%;
+    }
+
+    .column-11 {
+      width: 91.6667%
+    }
+
+    .column-12 {
+      width: 100%;
+    }
 
     header {
       padding: 1em 1.5em;
@@ -94,6 +132,7 @@
       display: table;
       content: " ";
     }
+
     .clearfix::after {
       clear: both;
     }

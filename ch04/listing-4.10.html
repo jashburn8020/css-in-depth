@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -16,7 +17,7 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
@@ -52,14 +53,17 @@
       clear: left;
     }
 
+    /* Float image to the left */
     .media-image {
       float: left;
     }
 
+    /* Remove top margin applied by the lobotomized owl */
     .media-body {
       margin-top: 0;
     }
 
+    /* Override top margin applied by user agent styles */
     .media-body h4 {
       margin-top: 0;
     }
@@ -69,6 +73,7 @@
       display: table;
       content: " ";
     }
+
     .clearfix::after {
       clear: both;
     }

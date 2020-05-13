@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -16,12 +17,11 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
-    .row {
-    }
+    .row {}
 
     .row::after {
       content: " ";
@@ -33,18 +33,53 @@
       float: left;
     }
 
-    .column-1 { width: 8.3333%; }
-    .column-2 { width: 16.6667%; }
-    .column-3 { width: 25%; }
-    .column-4 { width: 33.3333%; }
-    .column-5 { width: 41.6667%; }
-    .column-6 { width: 50%; }
-    .column-7 { width: 58.3333%; }
-    .column-8 { width: 66.6667%; }
-    .column-9 { width: 75%; }
-    .column-10 { width: 83.3333%; }
-    .column-11 { width: 91.6667% }
-    .column-12 { width: 100%; }
+    .column-1 {
+      width: 8.3333%;
+    }
+
+    .column-2 {
+      width: 16.6667%;
+    }
+
+    .column-3 {
+      width: 25%;
+    }
+
+    .column-4 {
+      width: 33.3333%;
+    }
+
+    .column-5 {
+      width: 41.6667%;
+    }
+
+    .column-6 {
+      width: 50%;
+    }
+
+    .column-7 {
+      width: 58.3333%;
+    }
+
+    .column-8 {
+      width: 66.6667%;
+    }
+
+    .column-9 {
+      width: 75%;
+    }
+
+    .column-10 {
+      width: 83.3333%;
+    }
+
+    .column-11 {
+      width: 91.6667%
+    }
+
+    .column-12 {
+      width: 100%;
+    }
 
     header {
       padding: 1em 1.5em;
@@ -55,6 +90,9 @@
     }
 
     .main {
+      /* Add bottom padding - because you removed all margins from the media object,
+      including the bottom margin, there’s no longer a gap below the last row of media
+      objects and the bottom of their container */
       padding: 0 1.5em 1.5em;
       background-color: #fff;
       border-radius: .5em;
@@ -90,6 +128,7 @@
       display: table;
       content: " ";
     }
+
     .clearfix::after {
       clear: both;
     }
