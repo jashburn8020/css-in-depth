@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -16,7 +17,7 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
@@ -33,11 +34,11 @@
       border-radius: .2em;
     }
 
-    .site-nav > li {
+    .site-nav>li {
       margin-top: 0;
     }
 
-    .site-nav > li > a {
+    .site-nav>li>a {
       display: block;
       padding: .5em 1em;
       background-color: #cc6b5a;
@@ -45,28 +46,30 @@
       text-decoration: none;
     }
 
-    .site-nav > li + li {
+    .site-nav>li+li {
       margin-left: 1.5em;
     }
 
-    .site-nav > .nav-right {
+    .site-nav>.nav-right {
       margin-left: auto;
     }
 
+    /* Adds background color and padding to the three tiles */
     .tile {
       padding: 1.5em;
       background-color: #fff;
     }
 
+    /* Flexbox layout to the main container */
     .flex {
       display: flex;
     }
 
-    .flex > * + * {
+    /* Remove the top margin and applies space between the flex items */
+    .flex>*+* {
       margin-top: 0;
       margin-left: 1.5em;
     }
-
   </style>
 </head>
 
@@ -99,13 +102,11 @@
             <h3>Login</h3>
             <p>
               <label for="username">Username</label>
-              <input id="username" type="text"
-                name="username"/>
+              <input id="username" type="text" name="username" />
             </p>
             <p>
               <label for="password">Password</label>
-              <input id="password" type="password"
-                name="password"/>
+              <input id="password" type="password" name="password" />
             </p>
             <button type="submit">Login</button>
           </form>

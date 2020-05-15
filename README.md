@@ -73,6 +73,25 @@ For example, in Chapter 1, listing 1.1 is HTML code and listing 1.2 is CSS that 
       - [Understanding a grid system](#understanding-a-grid-system)
       - [Building a grid system](#building-a-grid-system)
       - [Adding gutters](#adding-gutters)
+  - [5. Flexbox](#5-flexbox)
+    - [Flexbox principles](#flexbox-principles)
+      - [Building a basic flexbox menu](#building-a-basic-flexbox-menu)
+      - [Adding padding and spacing](#adding-padding-and-spacing)
+    - [Flex item sizes](#flex-item-sizes)
+      - [Using the `flex-basis` property](#using-the-flex-basis-property)
+      - [Using `flex-grow`](#using-flex-grow)
+      - [Using `flex-shrink`](#using-flex-shrink)
+      - [Some practical uses](#some-practical-uses)
+    - [Flex direction](#flex-direction)
+      - [Changing the flex direction](#changing-the-flex-direction)
+      - [Styling the login form](#styling-the-login-form)
+    - [Alignment, spacing, and other details](#alignment-spacing-and-other-details)
+      - [Understanding flex container properties](#understanding-flex-container-properties)
+      - [Understanding flex item properties](#understanding-flex-item-properties)
+      - [Using alignment properties](#using-alignment-properties)
+    - [A couple of things to be aware of](#a-couple-of-things-to-be-aware-of)
+      - [Flexbugs](#flexbugs)
+      - [Full-page layout](#full-page-layout)
   - [Sources](#sources)
 
 ## Terminology
@@ -992,6 +1011,269 @@ a:active {
   - introduces a slight misalignment between a grid column and content outside the grid row
 - Fix misalignment by stretching the row to be a little wider using negative margins on the left and right sides
   - see: [`ch04/listing-4.18.html`](ch04/listing-4.18.html)
+
+## 5. Flexbox
+
+- Formally Flexible Box Layout
+- More predictable and far more specific control than floats
+- Simple solution to the long-standing problems of vertical centering and equal height columns
+- One weakness - the overwhelming number of options
+
+### Flexbox principles
+
+- `display: flex` turns an element into a flex container, and its direct children turn into flex items
+  - flex items align side by side, left to right, all in one row
+  - flex container fills the available width like a block element
+  - flex items may not necessarily fill the width of their flex container
+  - flex items are all the same height, determined naturally by their contents
+- `display: inline-flex` creates a flex container that behaves more like an inline-block element rather than a block
+  - flows inline with other inline elements
+  - won't automatically grow to 100% width
+  - flex items within it generally behave the same as with `display: flex`
+
+```text
+              main-start   MAIN AXIS   main-end
+              ────────────────────────────────→
+ cross-start │          FLEX CONTAINER
+             │ ┌──────────────────────────────┐
+             │ │  ┌───┐  ┌───┐  ┌───┐  ┌───┐  │
+CROSS AXIS   │ │  │ 1 │  │ 2 │  │ 3 │  │ 4 │  │
+             │ │  └───┘  └───┘  └───┘  └───┘  │
+             │ │          FLEX ITEMS          │
+   cross-end ↓ └──────────────────────────────┘
+```
+
+- Initial page and styles: [`ch05/listing-5.2.html`](ch05/listing-5.2.html)
+
+#### Building a basic flexbox menu
+
+- Flex container should be `<ul>`, its children, `<li>`, the flex items
+  - apply `display: flex` to the list
+  - override the default list styles and the lobotomized owl top margins
+  - apply colors
+  - see: [`ch05/listing-5.3.html`](ch05/listing-5.3.html)
+- Note:
+  - use [Autoprefixer](https://github.com/postcss/autoprefixer) to automatically apply vendor prefixes to support older browsers
+
+#### Adding padding and spacing
+
+- Apply the menu item padding to the internal `<a>` elements, not the `<li>` elements
+  - the entire area that looks like a menu link to behave like a link when the user clicks it
+- Make the links a display block
+  - if they were to remain inline, the height they'd contribute to their parent would be derived from their line height, not their padding and content
+- Add space between the menu items
+  - apply a margin between each item, but not to the outside edges
+  - use the `margin-left` property and an adjacent sibling combinator, `li + li`
+- Push last button all the way to the right
+  - apply an auto left margin, which causes the margin to fill all the available space
+- See: [`ch05/listing-5.5.html`](ch05/listing-5.5.html)
+
+### Flex item sizes
+
+- The `flex` property controls the size of the flex items along the _main axis_ (width)
+- [`ch05/listing-5.6.html`](ch05/listing-5.6.html)
+  - white background to the three tiles via the `tile` class
+  - flex layout to the `<main>` element by targeting the `flex` class
+  - remove top margin and apply space between the flex items
+  - content is nwo divided into two columns
+  - column widths are not yet specified, and so they size themselves naturally, based on their content
+- [`ch05/listing-5.7.html`](ch05/listing-5.7.html)
+  - use `flex` to apply widths of two-thirds and one-third on the columns via the `column-main` and `column-sidebar` classes
+  - `flex` property is shorthand for three different sizing properties:
+    - `flex-grow`
+    - `flex-shrink`
+    - `flex-basis`
+  - `flex: 2` is equivalent to `flex: 2 1 0%`
+
+#### Using the `flex-basis` property
+
+- Starting point for the size of an element - an initial "main size"
+- Can be set to any value that would apply to `width`, including values in px, ems, or %
+- Initial value is `auto`
+  - browser will look to see if the element has a `width` declared
+    - if declared, use that size
+    - if not, use the element's natural size by the contents
+  - `width` will be ignored for elements that have any flex basis other than `auto`
+- Once this initial main size is established for each flex item, they may need to grow or shrink in order to fit (or fill) the flex container along the main axis
+  - that's where `flex-grow` and `flex-shrink` come in
+
+#### Using `flex-grow`
+
+- Once `flex-basis` is computed for each flex item, they (plus any margins between them) will add up to some width
+  - may not necessarily fill the width of the flex container, leaving a remainder
+- The remainder will be consumed by the flex items based on their `flex-grow` values
+  - non-negative integer
+  - `flex-grow: 0`: won't grow past its flex basis
+  - items with non-zero growth factor - grow until the remainder is used up, filling the width of the container
+  - `flex-grow: 2`: grow twice as much as an item with `flex-grow: 1`
+- `flex: 2` and `flex: 1`
+  - flex basis of 0%, so 100% of the container's width is the remainder (minus the 1.5 em margin between the two columns)
+  - remainder is distributed to the two columns: two-thirds and one-third
+- Favor the use of the shorthand `flex` property instead of declaring the properties individually
+  - they are not set to their initial values when omitted
+  - shorthand assigns useful values for any of the 3 that you omit
+
+#### Using `flex-shrink`
+
+- After determining the initial main size of the flex items, they could exceed the size available in the flex container - overflow
+- `flex-shrink` indicates whether it should shrink to prevent overflow
+  - non-negative integer
+  - `flex-shrink: 0`: don't shrink
+  - an item with a higher value will shrink more than an item with a lower value, proportional to the `flex-shrink` values
+- [`ch05/listing-5.8.html`](ch05/listing-5.8.html)
+  - two columns sizing by relying on `flex-shrink`
+  - `column-main` is slightly narrower than in [`ch05/listing-5.7.html`](ch05/listing-5.7.html)
+  - `column-main` has padding but `column-sidebar` doesn't
+  - padding changes the way the initial main size of the flex item is determined when flex-basis is 0%
+  - `column-main` from [`ch05/listing-5.7.html`](ch05/listing-5.7.html) is 3 em wider - the size
+    of its left and right padding from `tile`
+  - if you need your measurements to be precise, either ensure the paddings are equal or use the flex basis method
+
+#### Some practical uses
+
+- `flex: none` | `flex: none` | `flex: none`
+  - items grow their natural width, not necessarily filling the width of the container
+- `flex: 0 0 300px` | `flex: 1`
+  - first item fixed width, second item fills the remainder
+- `flex: 0 0 200px` | `flex: 1` | `flex: 0 0 200px`
+  - 'holy grail' layout - first and third items with fixed width, center item grow to fill the remainder
+- `flex: 50%` | `flex: 25%` | `flex: 25%`
+  - items grow to the percentage widths specified; can be used to build a grid system
+
+### Flex direction
+
+- `flex-direction`
+  - `row` (initial value): items to flow left-to-right
+  - `column`: flex items to stack vertically (top to bottom)
+  - `row-reverse`: flow items right to left
+  - `column-reverse`: flow items bottom to top
+- [`ch05/listing-5.9-before.html`](ch05/listing-5.9-before.html)
+  - flex items (`column-main` and `column-sidebar`) are equal height, but the tiles inside the right flex item (`column-sidebar`) don't grow to fill it
+
+#### Changing the flex direction
+
+- [`ch05/listing-5.9.html`](ch05/listing-5.9.html)
+  - turn the right column (`column-sidebar`) into a flex container with `flex-direction: column`
+  - apply non-zero `flex-grow` value to both tiles within
+  - nested flexboxes - `column-sidebar`
+    - flex item for the outer flexbox
+    - flex container for the inner flexbox
+- `flex-direction: column`
+  - main axis is rotated, flows from top to bottom
+  - `flex-basis`, `flex-grow`, and `flex-shrink` now apply to the element height rather than the width
+  - `flex: 1`: height of flex item will stretch if necessary to fill the container
+  - flex container's height is determined by its flex items
+  - `flex-grow` and `flex-shrink` applied to the items will have no effect unless something else forces the height of the flex container to a specific size
+    - that "something" is the height derived from the outer flexbox
+
+#### Styling the login form
+
+- [`ch05/listing-5.10.html`](ch05/listing-5.10.html)
+  - styling the login form has 3 parts: heading, input fields, button
+  - text-like inputs: `display: block`
+    - normally, display block elements automatically fill the available width
+    - but `<input>`'s width is determined by the `size` attribute
+    - force specific width with `width`
+
+### Alignment, spacing, and other details
+
+- In general, you begin a flexbox as follows:
+  - identify a container and its items and use `display: flex` on the container
+  - if necessary, set the `flex-direction` on the container
+  - declare margins and/or `flex` values for the flex items where necessary to control their size
+  - once you've put elements roughly where they belong, you can add other flexbox properties where necessary
+
+#### Understanding flex container properties
+
+- **`flex-direction`**
+- **`flex-wrap`**
+  - `nowrap` (initial value), `wrap`, `wrap-reverse`
+  - to allow flex items to wrap to a new row
+  - when wrapping is enabled, the items don't shrink according to their `flex-shrink` values
+    - any items that would overflow the flex container wrap onto a new line
+  - if the flex direction is `column` or `column-reverse`
+    - `flex-wrap` will allow the flex items to overflow into a new column
+    - only happens if something constrains the height of the container
+      - otherwise it grows to contain its flex items
+- **`flex-flow`**
+  - shorthand for both `flex-direction` and `flex-wrap`
+  - e.g., `flex-flow: column wrap`
+- **`justify-content`**
+  - `flex-start` (initial value), `flex-end`, `center`, `space-between`, `space-around`
+  - control how items are positioned along the main axis
+  - `flex-start`
+    - stacks items against the beginning of the main axis
+    - no space between them unless the items have margins specified
+  - `flex-end`
+    - stacks the items at the end of the main axis
+  - `space-between`
+    - puts the first flex item at the beginning of the main axis, and the last item at the end
+      - remaining items are positioned evenly between them
+  - `space-around`
+    - similar, but it will also add even spacing before the first item and after the last
+  - spacing is applied after `margins` and `flex-grow` values are calculated
+    - if any items have a non-zero `flex-grow` value, or any items have an `auto` margin on the main axis, then `justify-content` has no effect
+- **`align-items`**
+  - `stretch` (initial value), `flex-start`, `flex-end`, `center`, `baseline`
+  - adjust items' alignment along the cross axis
+  - `stretch`
+    - all items to fill the container's height in a row layout, or width in a column layout
+  - all other values allow flex items to size themselves naturally
+  - `flex-start` and `flex-end`
+    - align items along the start or end of the cross axis (top or bottom of a row, respectively)
+  - `center`
+    - centers the items
+  - `baseline`
+    - align items so that the baseline of the first row of text in each flex item is aligned
+    - useful if you want the baseline of a header in one flex item with a large font to line up with the baseline of smaller text in the other flex items
+- **`align-content`**
+  - `stretch` (the initial value), `flex-start`, `flex-end`, `center`, `space-between`, and `space-around`
+  - if you enable wrapping (using `flex-wrap`), this property controls the spacing of each row inside the flex container along the cross axis
+    - ignored if items don't wrap
+  - property values apply spacing similar to `justify-content`
+
+#### Understanding flex item properties
+
+- **`flex-grow`**
+- **`flex-shrink`**
+- **`flex-basis`**
+- **`align-self`**
+  - `auto` (initial value), `flex-start`, `flex-end`, `center`, `stretch`, `baseline`
+  - control a flex item's alignment along its container's cross axis
+  - does the same thing as the flex container property `align-items`
+    - except it lets you align individual flex items differently
+  - `auto`
+    - defer to the container's `align-items` value
+  - any other value overrides the container's setting
+- **`order`**
+  - change the order the items are stacked
+  - `0` (initial value), any integer, positive or negative
+    - it multiple flex items have the same value, they'll appear according to source order
+  - lowest value item is moved to the beginning of the list
+
+#### Using alignment properties
+
+- [`ch05/listing-5.11.html`](ch05/listing-5.11.html)
+  - text '\$20.00' is wrapped in a `div` - flex container
+    - 3 flex items for the 3 different parts
+    - `justify-content: center` to horizontally center the flex items
+    - `align-items: center` and `align-self` to control vertical alignment
+
+### A couple of things to be aware of
+
+#### Flexbugs
+
+- <https://github.com/philipwalton/flexbugs>
+
+#### Full-page layout
+
+- Odd behavior if your page is large or is loaded over a slow connection
+- Flex sizes are calculated based on the number of flex items and the amount (and size) of content within them
+- Assume you have a three-column layout, built using a flexbox (`flex-direction: row`)
+  - as the browser loads content, it progressively renders it to the screen, even as it continues to download the remainder of the page
+  - if the content for two of these columns loads, the browser might render them before it loads the content for the third column
+    - the browser recalculates the sizes of each flex item and renders the page again
+- One suggestion is to favor grid layout for the full page layout
 
 ## Sources
 

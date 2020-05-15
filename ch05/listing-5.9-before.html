@@ -1,8 +1,8 @@
 <!doctype html>
 <!--
-This is the page just prior to adding listing 5.9. Content has been lengethed to illustrate
-the uneven height of the two columns before appyling the fix.
+This is the page just prior to adding listing 5.9. Content has been lengthened to illustrate the uneven height of the two columns before applying the fix.
 -->
+
 <head>
   <style>
     :root {
@@ -20,7 +20,7 @@ the uneven height of the two columns before appyling the fix.
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
@@ -37,11 +37,11 @@ the uneven height of the two columns before appyling the fix.
       border-radius: .2em;
     }
 
-    .site-nav > li {
+    .site-nav>li {
       margin-top: 0;
     }
 
-    .site-nav > li > a {
+    .site-nav>li>a {
       display: block;
       padding: .5em 1em;
       background-color: #cc6b5a;
@@ -49,11 +49,11 @@ the uneven height of the two columns before appyling the fix.
       text-decoration: none;
     }
 
-    .site-nav > li + li {
+    .site-nav>li+li {
       margin-left: 1.5em;
     }
 
-    .site-nav > .nav-right {
+    .site-nav>.nav-right {
       margin-left: auto;
     }
 
@@ -66,7 +66,7 @@ the uneven height of the two columns before appyling the fix.
       display: flex;
     }
 
-    .flex > * + * {
+    .flex>*+* {
       margin-top: 0;
       margin-left: 1.5em;
     }
@@ -78,7 +78,6 @@ the uneven height of the two columns before appyling the fix.
     .column-sidebar {
       flex: 33.33%;
     }
-
   </style>
 </head>
 
@@ -123,13 +122,11 @@ the uneven height of the two columns before appyling the fix.
             <h3>Login</h3>
             <p>
               <label for="username">Username</label>
-              <input id="username" type="text"
-                name="username"/>
+              <input id="username" type="text" name="username" />
             </p>
             <p>
               <label for="password">Password</label>
-              <input id="password" type="password"
-                name="password"/>
+              <input id="password" type="password" name="password" />
             </p>
             <button type="submit">Login</button>
           </form>

@@ -1,4 +1,5 @@
 <!doctype html>
+
 <head>
   <style>
     :root {
@@ -16,7 +17,7 @@
       font-family: Helvetica, Arial, sans-serif;
     }
 
-    body * + * {
+    body *+* {
       margin-top: 1.5em;
     }
 
@@ -25,23 +26,25 @@
       margin: 0 auto;
     }
 
+    /* Flex container */
     .site-nav {
       display: flex;
+      /* Override default list styles */
       padding-left: 0;
       background-color: #5f4b44;
       list-style-type: none;
     }
 
-    .site-nav > li {
+    .site-nav>li {
+      /* Override lobotomized owl top margins */
       margin-top: 0;
     }
 
-    .site-nav > li > a {
+    .site-nav>li>a {
       background-color: #cc6b5a;
       color: white;
       text-decoration: none;
     }
-
   </style>
 </head>
 
@@ -74,13 +77,11 @@
             <h3>Login</h3>
             <p>
               <label for="username">Username</label>
-              <input id="username" type="text"
-                name="username"/>
+              <input id="username" type="text" name="username" />
             </p>
             <p>
               <label for="password">Password</label>
-              <input id="password" type="password"
-                name="password"/>
+              <input id="password" type="password" name="password" />
             </p>
             <button type="submit">Login</button>
           </form>
