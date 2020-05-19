@@ -1,0 +1,95 @@
+<!doctype html>
+
+<head>
+  <style>
+    /* Global box-sizing fix */
+    :root {
+      box-sizing: border-box;
+    }
+
+    *,
+    ::before,
+    ::after {
+      box-sizing: inherit;
+    }
+
+    body {
+      font-family: sans-serif;
+    }
+
+    /* Global margins */
+    body *+* {
+      margin-top: 1.5em;
+    }
+
+    /* Double-container to center page contents */
+    .container {
+      max-width: 1080px;
+      margin: 0 auto;
+    }
+
+    main {
+      text-align: justify;
+    }
+
+    .site-nav {
+      display: flex;
+      list-style-type: none;
+      border: 1px solid black;
+      border-radius: 0.2em;
+      padding: .5em;
+    }
+
+    .site-nav>li {
+      margin-top: 0;
+    }
+
+    .site-nav>li>a {
+      display: block;
+      padding: .3em .5em;
+      border: 2px solid blue;
+      border-radius: 0.3em;
+      text-decoration: none;
+      color: black;
+      background-color: #DFE8EE;
+      text-align: center;
+    }
+
+    .site-nav li {
+      /* flex: auto; */
+      flex: 1;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Navigation - Space distributed within the items</h1>
+    </header>
+    <nav>
+      <ul class="site-nav">
+        <li><a href="#">Page 1</a></li>
+        <li><a href="#">Page 2</a></li>
+        <li><a href="#">Page 3 is longer</a></li>
+        <li><a href="#">Page 4</a></li>
+      </ul>
+    </nav>
+    <main>
+      Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+      incididunt ut labore et dolore magna aliqua. Ac feugiat sed lectus vestibulum.
+      Elit at imperdiet dui accumsan sit amet nulla facilisi morbi. In cursus turpis
+      massa tincidunt dui ut ornare lectus. Cras semper auctor neque vitae tempus quam.
+      Elit scelerisque mauris pellentesque pulvinar pellentesque habitant. Purus sit
+      amet volutpat consequat mauris nunc congue nisi vitae. Odio ut enim blandit
+      volutpat maecenas volutpat blandit aliquam. Egestas fringilla phasellus faucibus
+      scelerisque eleifend donec pretium vulputate sapien. Tincidunt ornare massa eget
+      egestas. Integer enim neque volutpat ac tincidunt. Malesuada fames ac turpis
+      egestas sed tempus. Lectus quam id leo in vitae turpis massa sed. Nibh tellus
+      molestie nunc non blandit massa enim. Fames ac turpis egestas maecenas pharetra
+      convallis posuere morbi. Dictumst quisque sagittis purus sit amet volutpat. Vel
+      eros donec ac odio tempor orci. Id venenatis a condimentum vitae sapien
+      pellentesque habitant. Ut venenatis tellus in metus vulputate eu scelerisque.
+    </main>
+  </div>
+</body>

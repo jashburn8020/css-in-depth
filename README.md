@@ -1075,7 +1075,7 @@ CROSS AXIS   │ │  │ 1 │  │ 2 │  │ 3 │  │ 4 │  │
   - white background to the three tiles via the `tile` class
   - flex layout to the `<main>` element by targeting the `flex` class
   - remove top margin and apply space between the flex items
-  - content is nwo divided into two columns
+  - content is now divided into two columns
   - column widths are not yet specified, and so they size themselves naturally, based on their content
 - [`ch05/listing-5.7.html`](ch05/listing-5.7.html)
   - use `flex` to apply widths of two-thirds and one-third on the columns via the `column-main` and `column-sidebar` classes
