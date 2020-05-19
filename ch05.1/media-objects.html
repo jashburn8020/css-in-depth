@@ -1,0 +1,109 @@
+<!doctype html>
+
+<head>
+  <style>
+    /* Global box-sizing fix */
+    :root {
+      box-sizing: border-box;
+      --media-half-gutter: .5em;
+    }
+
+    *,
+    ::before,
+    ::after {
+      box-sizing: inherit;
+    }
+
+    body {
+      font-family: sans-serif;
+    }
+
+    /* Global margins */
+    body *+* {
+      margin-top: 1em;
+    }
+
+    /* Double-container to center page contents */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    main {
+      text-align: justify;
+    }
+
+    .media {
+      display: flex;
+      align-items: flex-start;
+      border: 1px solid black;
+      border-radius: .2em;
+      padding: .7em;
+    }
+
+    .media:nth-child(even) {
+      flex-direction: row-reverse;
+    }
+
+    .media-body {
+      flex: 1;
+      margin-top: 0;
+      margin: var(--media-half-gutter);
+    }
+
+    .media-body p:first-child {
+      margin-top: 0;
+    }
+
+    .media-image {
+      margin: var(--media-half-gutter)
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Media objects</h1>
+    </header>
+    <main>
+      <div class="media">
+        <img class="media-image" src="shoes.png" width="80">
+        <div class="media-body">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ac feugiat sed lectus
+            vestibulum. Elit at imperdiet dui accumsan sit amet nulla facilisi morbi.
+          </p>
+        </div>
+      </div>
+      <div class="media">
+        <img class="media-image" src="runner.png" width="80">
+        <div class="media-body">
+          <p>In
+            cursus turpis massa tincidunt dui ut ornare lectus. Cras semper auctor neque
+            vitae tempus quam. Elit scelerisque mauris pellentesque pulvinar
+            pellentesque habitant. Purus sit amet volutpat consequat mauris nunc congue
+            nisi vitae. Odio ut enim blandit volutpat maecenas volutpat blandit aliquam.
+            Egestas fringilla phasellus faucibus scelerisque eleifend donec pretium
+            vulputate sapien. Tincidunt ornare massa eget egestas. Integer enim neque
+            volutpat ac tincidunt.</p>
+          <p>Lectus quam id leo in vitae turpis massa sed. Nibh tellus molestie nunc non
+            blandit massa enim. Fames ac turpis egestas maecenas pharetra convallis
+            posuere morbi. Dictumst quisque sagittis purus sit amet volutpat. Vel eros
+            donec ac odio tempor orci. Id venenatis a condimentum vitae sapien
+            pellentesque habitant. Ut venenatis tellus in metus vulputate eu
+            scelerisque.</p>
+        </div>
+      </div>
+      <div class="media">
+        <img class="media-image" src="shoes.png" width="80">
+        <div class="media-body">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+            tempor incididunt ut labore et dolore magna aliqua. Ac feugiat sed lectus
+            vestibulum. Elit at imperdiet dui accumsan sit amet nulla facilisi morbi.
+          </p>
+        </div>
+      </div>
+    </main>
+  </div>
+</body>

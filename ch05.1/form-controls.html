@@ -1,0 +1,77 @@
+<!doctype html>
+
+<head>
+  <style>
+    /* Global box-sizing fix */
+    :root {
+      box-sizing: border-box;
+      --media-half-gutter: .5em;
+    }
+
+    *,
+    ::before,
+    ::after {
+      box-sizing: inherit;
+    }
+
+    body {
+      font-family: sans-serif;
+    }
+
+    /* Global margins */
+    body *+* {
+      margin-top: 1em;
+    }
+
+    /* Double-container to center page contents */
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    main {
+      text-align: justify;
+    }
+
+    .field-wrapper {
+      display: flex;
+      border: 1px solid black;
+      border-radius: .2em;
+      padding: .7em;
+    }
+
+    .field-wrapper input {
+      border: 1px solid #618BA8;
+      padding: .5em;
+      font-size: 1.2rem;
+      font-family: sans-serif;
+    }
+
+    .field-wrapper input[type=text] {
+      flex: 1;
+      background-color: #AFC4D3;
+    }
+
+    .field-wrapper input[type=submit] {
+      background-color: #618BA8;
+      color: white;
+      margin: 0;
+      cursor: pointer;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <header>
+      <h1>Form controls</h1>
+    </header>
+    <main>
+      <form>
+        <div class="field-wrapper">
+          <input type="text"><input type="submit" value="Send">
+        </div>
+      </form>
+    </main>
+  </div>
+</body>

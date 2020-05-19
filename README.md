@@ -92,6 +92,7 @@ For example, in Chapter 1, listing 1.1 is HTML code and listing 1.2 is CSS that 
     - [A couple of things to be aware of](#a-couple-of-things-to-be-aware-of)
       - [Flexbugs](#flexbugs)
       - [Full-page layout](#full-page-layout)
+  - [5.1 Use cases of flexbox](#51-use-cases-of-flexbox)
   - [Sources](#sources)
 
 ## Terminology
@@ -1200,7 +1201,7 @@ CROSS AXIS   │ │  │ 1 │  │ 2 │  │ 3 │  │ 4 │  │
   - e.g., `flex-flow: column wrap`
 - **`justify-content`**
   - `flex-start` (initial value), `flex-end`, `center`, `space-between`, `space-around`
-  - control how items are positioned along the main axis
+  - control how items are positioned along the **main axis**
   - `flex-start`
     - stacks items against the beginning of the main axis
     - no space between them unless the items have margins specified
@@ -1215,7 +1216,7 @@ CROSS AXIS   │ │  │ 1 │  │ 2 │  │ 3 │  │ 4 │  │
     - if any items have a non-zero `flex-grow` value, or any items have an `auto` margin on the main axis, then `justify-content` has no effect
 - **`align-items`**
   - `stretch` (initial value), `flex-start`, `flex-end`, `center`, `baseline`
-  - adjust items' alignment along the cross axis
+  - adjust items' alignment along the **cross axis**
   - `stretch`
     - all items to fill the container's height in a row layout, or width in a column layout
   - all other values allow flex items to size themselves naturally
@@ -1275,7 +1276,17 @@ CROSS AXIS   │ │  │ 1 │  │ 2 │  │ 3 │  │ 4 │  │
     - the browser recalculates the sizes of each flex item and renders the page again
 - One suggestion is to favor grid layout for the full page layout
 
+## 5.1 Use cases of flexbox
+
+- [Navigation - space distributed outside the items](ch05.1/navigation-space-outside.html)
+- [Navigation - space distributed within the items](ch05.1/navigation-space-within.html)
+- [Split navigation](ch05.1/navigation-split.html)
+- [Card layout pushing footer down](ch05.1/card-layout-footer-down.html)
+- [Media objects](ch05.1/media-objects.html)
+- [Form controls](ch05.1/form-controls.html)
+
 ## Sources
 
 - Grant, Keith J. _CSS in depth_. Shelter Island, NY: Manning Publications Co, 2018.
 - "CSS Properties." _CSS Infos_, css-infos.net/.
+- "Typical use cases of Flexbox." _MDN Web Docs_. developer.mozilla.org/en-US/docs/Web/CSS/CSS_Flexible_Box_Layout/Typical_Use_Cases_of_Flexbox.
